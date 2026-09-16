@@ -1,0 +1,20 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: sportconnect-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: sportconnect
+      POSTGRES_USER: sportconnect
+      POSTGRES_PASSWORD: sportconnect
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - sportconnect_data:/var/lib/postgresql/data
+
+volumes:
+  sportconnect_data:
