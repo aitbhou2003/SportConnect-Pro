@@ -1,7 +1,7 @@
-const pool = require("../config/database")
+const pool = require("../config/database");
 
 async function getAllMenmbers() {
-    const result = await pool.query(`
+  const result = await pool.query(`
         SELECT 
         members.id,
         members.name,
@@ -18,12 +18,12 @@ async function getAllMenmbers() {
         ORDER BY members.id
         `);
 
-    return result.rows;
+  return result.rows;
 }
 
-
 async function getMemberById(id) {
-    const result = await pool.query(`
+  const result = await pool.query(
+    `
         SELECT 
         members.id,
         members.name,
@@ -39,21 +39,23 @@ async function getMemberById(id) {
         JOIN families
         ON members.family_id = families.id
         WHERE members.id = $1
-        `, [id]);
+        `,
+    [id],
+  );
 
-    return result.rows[0]
+  return result.rows[0];
 }
 
 async function createMember(
-    name,
-    birthDate,
-    resident,
-    qf,
-    medicalCertificateDate,
-    familyId
+  name,
+  birthDate,
+  resident,
+  qf,
+  medicalCertificateDate,
+  familyId,
 ) {
-
-    const result = await pool.query(`
+  const result = await pool.query(
+    `
         INSERT INTO members (
             name,
             birth_date,
@@ -64,30 +66,24 @@ async function createMember(
         )
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *
-    `, [
-        name,
-        birthDate,
-        resident,
-        qf,
-        medicalCertificateDate,
-        familyId
-    ]);
+    `,
+    [name, birthDate, resident, qf, medicalCertificateDate, familyId],
+  );
 
-    return result.rows[0];
+  return result.rows[0];
 }
 
-
 async function updateMember(
-    id,
-    name,
-    birthDate,
-    resident,
-    qf,
-    medicalCertificateDate,
-    familyId
+  id,
+  name,
+  birthDate,
+  resident,
+  qf,
+  medicalCertificateDate,
+  familyId,
 ) {
-
-    const result = await pool.query(`
+  const result = await pool.query(
+    `
         UPDATE members
         SET
             name = $1,
@@ -98,24 +94,30 @@ async function updateMember(
             family_id = $6
         WHERE id = $7
         RETURNING *
-    `, [
-        name,
-        birthDate,
-        resident,
-        qf,
-        medicalCertificateDate,
-        familyId,
-        id
-    ]);
+    `,
+    [name, birthDate, resident, qf, medicalCertificateDate, familyId, id],
+  );
 
-    return result.rows[0];
+  return result.rows[0];
 }
 
+async function deleteMember(id) {
+  const result = await pool.query(
+    `
+        DELETE FROM members
+        WHERE ID = $1
+        RETURNING *
+        `,
+    [id],
+  );
+
+  return result.rows[0];
+}
 
 module.exports = {
-    getAllMenmbers,
-    getMemberById,
-    createMember,
-    updateMember
-}
-
+  getAllMenmbers,
+  getMemberById,
+  createMember,
+  updateMember,
+  deleteMember
+};

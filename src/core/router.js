@@ -18,4 +18,6 @@ router.on("POST","/members",memberController.createMember)
 
 router.on("PUT","/members/:id",memberController.updateMember);
 
+router.on("DELETE","/members/:id",memberController.deleteMember)
+
 module.exports = router;
