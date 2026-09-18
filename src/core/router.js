@@ -14,4 +14,6 @@ router.on("GET","/members",memberController.getMembers);
 
 router.on("GET","/members/:id",memberController.getMemberById)
 
+router.on("POST","/members",memberController.createMember)
+
 module.exports = router;

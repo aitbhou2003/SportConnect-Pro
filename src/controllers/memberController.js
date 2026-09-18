@@ -30,6 +30,16 @@ async function getMemberById(request, response, params) {
     try {
         const id = Number(params.id)
 
+        if (!Number.isInteger(id) || id <= 0) {
+            response.writeHead(400, {
+                "Content-Type": "application/json"
+            });
+
+            response.end(JSON.stringify({
+                message: "Invalide membre id"
+            }))
+        }
+
         const member = await memberService.getMemberById(id);
         if (!member) {
             response.writeHead(404, {
@@ -65,7 +75,58 @@ async function getMemberById(request, response, params) {
     }
 }
 
+
+async function createMember(request, response) {
+
+    let body = "";
+
+    request.on("data", (chunk) => {
+        body += chunk;
+    });
+
+
+    request.on("end", async () => {
+
+        try {
+
+            const data = JSON.parse(body);
+
+            
+            const member = await memberService.createMember(
+                data.name,
+                data.birth_date,
+                data.resident,
+                data.qf,
+                data.medical_certificate_date,
+                data.family_id
+            );
+
+            response.writeHead(201, {
+                "Content-Type": "application/json"
+            });
+
+            response.end(JSON.stringify(member));
+
+        } catch (error) {
+
+            console.error(error);
+
+            response.writeHead(500, {
+                "Content-Type": "application/json"
+            });
+
+            response.end(JSON.stringify({
+                message: "Internal server error"
+            }));
+        }
+    });
+}
+
+
+
+
 module.exports = {
     getMembers,
-    getMemberById   
+    getMemberById,
+    createMember
 }
