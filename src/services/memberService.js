@@ -77,9 +77,45 @@ async function createMember(
 }
 
 
+async function updateMember(
+    id,
+    name,
+    birthDate,
+    resident,
+    qf,
+    medicalCertificateDate,
+    familyId
+) {
+
+    const result = await pool.query(`
+        UPDATE members
+        SET
+            name = $1,
+            birth_date = $2,
+            resident = $3,
+            qf = $4,
+            medical_certificate_date = $5,
+            family_id = $6
+        WHERE id = $7
+        RETURNING *
+    `, [
+        name,
+        birthDate,
+        resident,
+        qf,
+        medicalCertificateDate,
+        familyId,
+        id
+    ]);
+
+    return result.rows[0];
+}
+
+
 module.exports = {
     getAllMenmbers,
     getMemberById,
-    createMember
+    createMember,
+    updateMember
 }
 
