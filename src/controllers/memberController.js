@@ -91,7 +91,31 @@ async function createMember(request, response) {
 
             const data = JSON.parse(body);
 
-            
+            if (typeof data.name !== "string" ||
+                data.name.trim() === "" ||
+                typeof data.birth_date !== "string" ||
+                typeof data.resident !== "boolean" ||
+                typeof data.qf !== "number" ||
+                data.qf < 0 ||
+                typeof data.medical_certificate_date !== "string" ||
+                !data.medical_certificate_date ||
+                !Number.isInteger(data.family_id) ||
+                data.family_id <= 0
+            ) {
+                response.writeHead(400, {
+                    "Content-Type": "application/json"
+                })
+
+                response.end(JSON.stringify({
+                    message: "invalide data"
+                }));
+
+
+                return
+
+
+            }
+
             const member = await memberService.createMember(
                 data.name,
                 data.birth_date,
