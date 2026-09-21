@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        <%= activity.name %> - SportConnect Pro
+    </title>
+</head>
+
+<body>
+
+    <h1>SportConnect Pro</h1>
+
+    <nav>
+        <a href="/activities">
+            ← Back to activities
+        </a>
+    </nav>
+
+    <hr>
+
+    <h2>
+        <%= activity.name %>
+    </h2>
+
+    <p>
+        <strong>Price:</strong>
+        <%= activity.base_price %> €
+    </p>
+
+    <p>
+        <strong>Maximum capacity:</strong>
+        <%= activity.max_capacity %>
+    </p>
+
+    <p>
+        <strong>Age category:</strong>
+        <%= activity.age_category %>
+    </p>
+
+    <p>
+        <strong>Association ID:</strong>
+        <%= activity.association_id %>
+    </p>
+
+    <p>
+        <strong>Facility ID:</strong>
+        <%= activity.facility_id %>
+    </p>
+
+    <p>
+        <strong>Weekday:</strong>
+        <%= activity.weekday %>
+    </p>
+
+    <p>
+        <strong>Start:</strong>
+        <%= activity.start_time %>
+    </p>
+
+    <p>
+        <strong>End:</strong>
+        <%= activity.end_time %>
+    </p>
+
+    <p>
+        <strong>Subzone:</strong>
+        <%= activity.subzone || "Whole facility" %>
+    </p>
+
+</body>
+</html>

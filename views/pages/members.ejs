@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Members - SportConnect Pro</title>
+</head>
+
+<body>
+
+    <h1>SportConnect Pro</h1>
+
+    <nav>
+        <a href="/activities">Activities</a>
+        |
+        <a href="/members">Members</a>
+    </nav>
+
+    <hr>
+
+    <h2>Members</h2>
+
+    <% if (members.length === 0) { %>
+
+        <p>No members found.</p>
+
+    <% } else { %>
+
+        <% members.forEach((member) => { %>
+
+            <article>
+
+                <h3>
+                    <%= member.name %>
+                </h3>
+
+                <p>
+                    Birth date:
+                    <%= member.birth_date %>
+                </p>
+
+                <p>
+                    Resident:
+                    <%= member.resident ? "Yes" : "No" %>
+                </p>
+
+                <p>
+                    QF:
+                    <%= member.qf %> €
+                </p>
+
+                <p>
+                    Medical certificate:
+                    <%= member.medical_certificate_date %>
+                </p>
+
+                <p>
+                    Family:
+                    <%= member.family_name %>
+                </p>
+
+                <a href="/members/<%= member.id %>">
+                    View details
+                </a>
+
+            </article>
+
+            <hr>
+
+        <% }) %>
+
+    <% } %>
+
+</body>
+</html>

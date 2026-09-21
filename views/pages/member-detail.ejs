@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        <%= member.name %> - SportConnect Pro
+    </title>
+</head>
+
+<body>
+
+    <h1>SportConnect Pro</h1>
+
+    <nav>
+        <a href="/members">
+            ← Back to members
+        </a>
+    </nav>
+
+    <hr>
+
+    <h2>
+        <%= member.name %>
+    </h2>
+
+    <p>
+        <strong>Birth date:</strong>
+        <%= member.birth_date %>
+    </p>
+
+    <p>
+        <strong>Resident:</strong>
+        <%= member.resident ? "Yes" : "No" %>
+    </p>
+
+    <p>
+        <strong>QF:</strong>
+        <%= member.qf %> €
+    </p>
+
+    <p>
+        <strong>Medical certificate:</strong>
+        <%= member.medical_certificate_date %>
+    </p>
+
+    <p>
+        <strong>Family:</strong>
+        <%= member.family_name %>
+    </p>
+
+</body>
+</html>

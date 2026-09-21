@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Activities - SportConnect Pro</title>
+</head>
+
+<body>
+
+    <h1>SportConnect Pro</h1>
+
+    <nav>
+        <a href="/activities">Activities</a>
+        |
+        <a href="/members">Members</a>
+    </nav>
+
+    <hr>
+
+    <h2>Activities</h2>
+
+    <% if (activities.length === 0) { %>
+
+        <p>No activities found.</p>
+
+    <% } else { %>
+
+        <% activities.forEach((activity) => { %>
+
+            <article>
+
+                <h3>
+                    <%= activity.name %>
+                </h3>
+
+                <p>
+                    Price:
+                    <%= activity.base_price %> €
+                </p>
+
+                <p>
+                    Capacity:
+                    <%= activity.max_capacity %>
+                </p>
+
+                <p>
+                    Category:
+                    <%= activity.age_category %>
+                </p>
+
+                <p>
+                    Day:
+                    <%= activity.weekday %>
+                </p>
+
+                <p>
+                    Time:
+                    <%= activity.start_time %>
+                    -
+                    <%= activity.end_time %>
+                </p>
+
+                <p>
+                    Subzone:
+                    <%= activity.subzone || "Whole facility" %>
+                </p>
+
+                <a href="/activities/<%= activity.id %>">
+                    View details
+                </a>
+
+            </article>
+
+            <hr>
+
+        <% }) %>
+
+    <% } %>
+
+</body>
+</html>
