@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        <%= editMode ? "Edit Member" : "Add Member" %>
+        - SportConnect Pro
+    </title>
+</head>
+
+<body>
+
+    <h1>SportConnect Pro</h1>
+
+    <nav>
+        <a href="/activities">Activities</a>
+        |
+        <a href="/members">Members</a>
+    </nav>
+
+    <hr>
+
+    <% if (editMode) { %>
+
+        <h2>Edit Member</h2>
+
+    <% } else { %>
+
+        <h2>Add Member</h2>
+
+    <% } %>
+
+
+    <form
+        method="POST"
+        action="<%= editMode
+            ? `/members/${member.id}/update`
+            : `/members`
+        %>"
+    >
+
+        <div>
+            <label for="name">
+                Name:
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="<%= member ? member.name : '' %>"
+                required
+            >
+        </div>
+
+        <br>
+
+
+        <div>
+            <label for="birth_date">
+                Birth date:
+            </label>
+
+            <input
+                type="date"
+                id="birth_date"
+                name="birth_date"
+                value="<%= member ? member.birth_date : '' %>"
+                required
+            >
+        </div>
+
+        <br>
+
+
+        <div>
+            <label for="resident">
+                Resident:
+            </label>
+
+            <select
+                id="resident"
+                name="resident"
+            >
+
+                <option
+                    value="true"
+                    <%= member && member.resident
+                        ? "selected"
+                        : ""
+                    %>
+                >
+                    Yes
+                </option>
+
+                <option
+                    value="false"
+                    <%= member && !member.resident
+                        ? "selected"
+                        : ""
+                    %>
+                >
+                    No
+                </option>
+
+            </select>
+        </div>
+
+        <br>
+
+
+        <div>
+            <label for="qf">
+                QF:
+            </label>
+
+            <input
+                type="number"
+                id="qf"
+                name="qf"
+                min="0"
+                step="0.01"
+                value="<%= member ? member.qf : '' %>"
+                required
+            >
+        </div>
+
+        <br>
+
+
+        <div>
+            <label for="medical_certificate_date">
+                Medical certificate date:
+            </label>
+
+            <input
+                type="date"
+                id="medical_certificate_date"
+                name="medical_certificate_date"
+                value="<%= member
+                    ? member.medical_certificate_date || ''
+                    : ''
+                %>"
+            >
+        </div>
+
+        <br>
+
+
+        <div>
+            <label for="family_id">
+                Family ID:
+            </label>
+
+            <input
+                type="number"
+                id="family_id"
+                name="family_id"
+                min="1"
+                value="<%= member ? member.family_id : '' %>"
+            >
+        </div>
+
+        <br>
+
+
+        <button type="submit">
+
+            <%= editMode
+                ? "Update Member"
+                : "Add Member"
+            %>
+
+        </button>
+
+        <a href="/members">
+            Cancel
+        </a>
+
+    </form>
+
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Registration - SportConnect Pro
+    </title>
+</head>
+
+<body>
+
+    <h1>SportConnect Pro</h1>
+
+    <nav>
+        <a href="/activities">
+            Activities
+        </a>
+        |
+        <a href="/members">
+            Members
+        </a>
+    </nav>
+
+    <hr>
+
+    <h2>
+        Register for an activity
+    </h2>
+
+
+    <h3>
+        <%= activity.name %>
+    </h3>
+
+    <p>
+        <strong>Base price:</strong>
+        <%= activity.base_price %> €
+    </p>
+
+    <p>
+        <strong>Age category:</strong>
+        <%= activity.age_category %>
+    </p>
+
+    <p>
+        <strong>Capacity:</strong>
+        <%= activity.max_capacity %>
+    </p>
+
+    <p>
+        <strong>Schedule:</strong>
+        <%= activity.start_time %>
+        -
+        <%= activity.end_time %>
+    </p>
+
+    <hr>
+
+
+    <form
+        method="POST"
+        action="/registrations"
+    >
+
+        <input
+            type="hidden"
+            name="activity_id"
+            value="<%= activity.id %>"
+        >
+
+
+        <div>
+
+            <label for="member_id">
+                Member:
+            </label>
+
+            <select
+                id="member_id"
+                name="member_id"
+                required
+            >
+
+                <option value="">
+                    -- Select a member --
+                </option>
+
+                <% members.forEach((member) => { %>
+
+                    <option
+                        value="<%= member.id %>"
+                    >
+                        <%= member.name %>
+                        -
+                        ID <%= member.id %>
+                    </option>
+
+                <% }) %>
+
+            </select>
+
+        </div>
+
+
+        <br>
+
+
+        <div>
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    name="has_pass_sport"
+                    value="true"
+                >
+
+                Use Pass'Sport
+                (-50 €)
+
+            </label>
+
+        </div>
+
+
+        <br>
+
+
+        <button type="submit">
+            Confirm registration
+        </button>
+
+    </form>
+
+
+    <hr>
+
+
+    <p>
+        <a href="/activities/<%= activity.id %>">
+            ← Back to activity
+        </a>
+    </p>
+
+</body>
+
+</html>

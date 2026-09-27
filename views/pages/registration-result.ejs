@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Registration Result - SportConnect Pro
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        SportConnect Pro
+    </h1>
+
+
+    <nav>
+
+        <a href="/activities">
+            Activities
+        </a>
+
+        |
+        
+        <a href="/members">
+            Members
+        </a>
+
+    </nav>
+
+
+    <hr>
+
+
+    <% if (status === "confirmed") { %>
+
+        <h2>
+            Registration confirmed
+        </h2>
+
+        <p>
+            <%= message %>
+        </p>
+
+
+        <h3>
+            Registration information
+        </h3>
+
+        <p>
+            <strong>Member:</strong>
+            <%= member.name %>
+        </p>
+
+        <p>
+            <strong>Activity:</strong>
+            <%= activity.name %>
+        </p>
+
+
+        <hr>
+
+
+        <h3>
+            Price breakdown
+        </h3>
+
+
+        <p>
+            Base price:
+            <strong>
+                <%= pricing.base_price %> €
+            </strong>
+        </p>
+
+
+        <% if (pricing.adjustments.length > 0) { %>
+
+            <ul>
+
+                <% pricing.adjustments.forEach((adjustment) => { %>
+
+                    <li>
+
+                        <%= adjustment.label %>:
+
+                        <%= adjustment.amount %> €
+
+                    </li>
+
+                <% }) %>
+
+            </ul>
+
+        <% } %>
+
+
+        <p>
+
+            <strong>
+                Final price:
+                <%= pricing.final_price %> €
+            </strong>
+
+        </p>
+
+
+        <h3>
+            Payment schedule
+        </h3>
+
+
+        <ul>
+
+            <% pricing.installments.forEach((installment) => { %>
+
+                <li>
+
+                    <%= installment.day %>
+
+                    -
+
+                    <%= installment.percentage %>
+
+                    :
+
+                    <strong>
+                        <%= installment.amount %> €
+                    </strong>
+
+                </li>
+
+            <% }) %>
+
+        </ul>
+
+
+    <% } else { %>
+
+
+        <h2>
+            Added to waiting list
+        </h2>
+
+
+        <p>
+            <%= message %>
+        </p>
+
+
+        <h3>
+            Information
+        </h3>
+
+
+        <p>
+            <strong>Member:</strong>
+            <%= member.name %>
+        </p>
+
+
+        <p>
+            <strong>Activity:</strong>
+            <%= activity.name %>
+        </p>
+
+
+        <p>
+            <strong>Priority score:</strong>
+            <%= priorityScore %>
+        </p>
+
+
+        <p>
+            The member will be considered when
+            a place becomes available.
+        </p>
+
+
+    <% } %>
+
+
+    <hr>
+
+
+    <p>
+
+        <a href="/activities">
+            ← Back to activities
+        </a>
+
+    </p>
+
+
+    <p>
+
+        <a href="/members">
+            Go to members
+        </a>
+
+    </p>
+
+</body>
+
+</html>

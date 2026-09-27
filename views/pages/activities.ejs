@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Activities - SportConnect Pro</title>
+    <title>Document</title>
 </head>
 
 <body>
@@ -21,63 +21,123 @@
 
     <h2>Activities</h2>
 
-    <% if (activities.length === 0) { %>
+    <p>
+        <a href="/activities/new">
+            + Add activity
+        </a>
+    </p>
 
-        <p>No activities found.</p>
+    <hr>
+    <% const daysMap={ 1: 'Monday' , 2: 'Tuesday' , 3: 'Wednesday' , 4: 'Thursday' , 5: 'Friday' , 6: 'Saturday' ,
+        7: 'Sunday' }; %>
 
-    <% } else { %>
+        <% if (activities.length===0) { %>
 
-        <% activities.forEach((activity) => { %>
+            <p>
+                No activity found.
+            </p>
 
-            <article>
+            <% } else { %>
 
-                <h3>
-                    <%= activity.name %>
-                </h3>
+                <% activities.forEach((activity)=> { %>
 
-                <p>
-                    Price:
-                    <%= activity.base_price %> €
-                </p>
+                    <article>
+                        <h3>
+                            <%= activity.name %>
+                        </h3>
 
-                <p>
-                    Capacity:
-                    <%= activity.max_capacity %>
-                </p>
+                        <p>
+                            Base price :
+                            <%= activity.base_price %>
+                        </p>
 
-                <p>
-                    Category:
-                    <%= activity.age_category %>
-                </p>
+                        <p>
+                            Max capacity :
+                            <%= activity.max_capacity %>
+                        </p>
 
-                <p>
-                    Day:
-                    <%= activity.weekday %>
-                </p>
+                        <p>
+                            Age category :
+                            <%= activity.age_category %>
+                        </p>
 
-                <p>
-                    Time:
-                    <%= activity.start_time %>
-                    -
-                    <%= activity.end_time %>
-                </p>
+                        <p>
+                            Association :
+                            <%= activity.association_name %>
+                        </p>
 
-                <p>
-                    Subzone:
-                    <%= activity.subzone || "Whole facility" %>
-                </p>
+                        <p>
+                            Facility :
+                            <%= activity.facility_name %>
+                        </p>
 
-                <a href="/activities/<%= activity.id %>">
-                    View details
-                </a>
+                        <p>
+                            Week day : 
+                            <%= daysMap[activity.weekday] %>
+                        </p>
 
-            </article>
+                        <p>
+                            Start time : 
+                            <%= activity.start_time %>
+                        </p>
 
-            <hr>
+                         <p>
+                            End time : 
+                            <%= activity.end_time %>
+                        </p>
 
-        <% }) %>
+                         <p>
+                            Subzone : 
+                            <%= activity.subzone || "Whole facility" %>
+                        </p>
+                        
 
-    <% } %>
+
+
+                        <a href="/activities/<%= activity.id %>">
+                            View details
+                        </a>
+
+                        |
+
+                        <a href="/activities/<%= activity.id %>/edit">
+                            Edit
+                        </a>
+
+                        |
+
+
+                        <form method="POST" action="/activities/<%= activity.id %>/delete" style="display: inline;">
+
+                            <button type="submit">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </article>
+                    <hr>
+
+
+                    <% }) %>
+
+                        <% } %>
+
+
+
+
+
+
+
+
+                            <!-- <% activities.forEach((activity) => { %>
+
+            <div><%= activity.name %></div>
+
+
+        <% }) %> -->
+
 
 </body>
+
 </html>

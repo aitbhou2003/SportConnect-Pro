@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
         <%= activity.name %> - SportConnect Pro
@@ -45,13 +42,13 @@
     </p>
 
     <p>
-        <strong>Association ID:</strong>
-        <%= activity.association_id %>
+        <strong>Association:</strong>
+        <%= activity.association_name || "Unknown" %>
     </p>
 
     <p>
-        <strong>Facility ID:</strong>
-        <%= activity.facility_id %>
+        <strong>Facility:</strong>
+        <%= activity.facility_name || "Unknown" %>
     </p>
 
     <p>
@@ -74,5 +71,35 @@
         <%= activity.subzone || "Whole facility" %>
     </p>
 
+    <hr>
+
+    <h3>Actions</h3>
+
+    <p>
+        <a href="/activities/<%= activity.id %>/edit">
+            Edit activity
+        </a>
+    </p>
+
+    <form
+        method="POST"
+        action="/activities/<%= activity.id %>/delete"
+    >
+        <button type="submit">
+            Delete activity
+        </button>
+    </form>
+
+    <hr>
+
+    <h3>Registration</h3>
+
+    <p>
+        <a href="/checkout/<%= activity.id %>">
+            Register for this activity
+        </a>
+    </p>
+
 </body>
+
 </html>

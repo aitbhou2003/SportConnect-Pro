@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -25,9 +26,20 @@
 
     <h2>Members</h2>
 
+    <p>
+        <a href="/members/new">
+            + Add Member
+        </a>
+    </p>
+
+    <hr>
+
+
     <% if (members.length === 0) { %>
 
-        <p>No members found.</p>
+        <p>
+            No members found.
+        </p>
 
     <% } else { %>
 
@@ -56,17 +68,39 @@
 
                 <p>
                     Medical certificate:
-                    <%= member.medical_certificate_date %>
+                    <%= member.medical_certificate_date || "None" %>
                 </p>
 
                 <p>
                     Family:
-                    <%= member.family_name %>
+                    <%= member.family_name || "None" %>
                 </p>
+
 
                 <a href="/members/<%= member.id %>">
                     View details
                 </a>
+
+                |
+
+                <a href="/members/<%= member.id %>/edit">
+                    Edit
+                </a>
+
+                |
+
+
+                <form
+                    method="POST"
+                    action="/members/<%= member.id %>/delete"
+                    style="display: inline;"
+                >
+
+                    <button type="submit">
+                        Delete
+                    </button>
+
+                </form>
 
             </article>
 
@@ -77,4 +111,5 @@
     <% } %>
 
 </body>
+
 </html>

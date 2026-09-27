@@ -2,288 +2,384 @@ const memberService = require("../services/memberService");
 const renderer = require("../core/renderer");
 
 async function getMembers(request, response) {
-    try {
-        const members = await memberService.getAllMenmbers();
+  try {
+    const members = await memberService.getAllMenmbers();
 
-        await renderer.renderPage(
-            response,
-            "members",
-            {
-                members
-            }
-        );
+    await renderer.renderPage(response, "members", {
+      members,
+    });
+  } catch (error) {
+    console.error(error);
 
-    } catch (error) {
-        console.error(error);
-
-        await renderer.renderPage(
-            response,
-            "error",
-            {
-                statusCode: 500,
-                message: "Internal server error"
-            },
-            500
-        );
-    }
+    await renderer.renderPage(
+      response,
+      "error",
+      {
+        statusCode: 500,
+        message: "Internal server error",
+      },
+      500,
+    );
+  }
 }
 
 async function getMemberById(request, response, params) {
-    try {
-        const id = Number(params.id);
-
-        if (!Number.isInteger(id) || id <= 0) {
-            await renderer.renderPage(
-                response,
-                "error",
-                {
-                    statusCode: 400,
-                    message: "Invalid member ID"
-                },
-                400
-            );
-
-            return;
-        }
-
-        const member = await memberService.getMemberById(id);
-
-        if (!member) {
-            await renderer.renderPage(
-                response,
-                "error",
-                {
-                    statusCode: 404,
-                    message: "Member not found"
-                },
-                404
-            );
-
-            return;
-        }
-
-        await renderer.renderPage(
-            response,
-            "member-detail",
-            {
-                member
-            }
-        );
-
-    } catch (error) {
-        console.error(error);
-
-        await renderer.renderPage(
-            response,
-            "error",
-            {
-                statusCode: 500,
-                message: "Internal server error"
-            },
-            500
-        );
-    }
-}
-
-async function createMember(request, response) {
-    let body = "";
-
-    request.on("data", (chunk) => {
-        body += chunk;
-    });
-
-    request.on("end", async () => {
-        try {
-            const data = JSON.parse(body);
-
-            if (
-                typeof data.name !== "string" ||
-                data.name.trim() === "" ||
-                typeof data.birth_date !== "string" ||
-                typeof data.resident !== "boolean" ||
-                typeof data.qf !== "number" ||
-                data.qf < 0 ||
-                typeof data.medical_certificate_date !== "string" ||
-                !data.medical_certificate_date ||
-                !Number.isInteger(data.family_id) ||
-                data.family_id <= 0
-            ) {
-                await renderer.renderPage(
-                    response,
-                    "error",
-                    {
-                        statusCode: 400,
-                        message: "Invalid member data"
-                    },
-                    400
-                );
-
-                return;
-            }
-
-            await memberService.createMember(
-                data.name,
-                data.birth_date,
-                data.resident,
-                data.qf,
-                data.medical_certificate_date,
-                data.family_id
-            );
-
-            response.writeHead(303, {
-                Location: "/members"
-            });
-
-            response.end();
-
-        } catch (error) {
-            console.error(error);
-
-            await renderer.renderPage(
-                response,
-                "error",
-                {
-                    statusCode: 500,
-                    message: "Internal server error"
-                },
-                500
-            );
-        }
-    });
-}
-
-async function updateMember(request, response, params) {
+  try {
     const id = Number(params.id);
 
     if (!Number.isInteger(id) || id <= 0) {
+      await renderer.renderPage(
+        response,
+        "error",
+        {
+          statusCode: 400,
+          message: "Invalid member ID",
+        },
+        400,
+      );
+
+      return;
+    }
+
+    const member = await memberService.getMemberById(id);
+
+    if (!member) {
+      await renderer.renderPage(
+        response,
+        "error",
+        {
+          statusCode: 404,
+          message: "Member not found",
+        },
+        404,
+      );
+
+      return;
+    }
+
+    await renderer.renderPage(response, "member-detail", {
+      member,
+    });
+  } catch (error) {
+    console.error(error);
+
+    await renderer.renderPage(
+      response,
+      "error",
+      {
+        statusCode: 500,
+        message: "Internal server error",
+      },
+      500,
+    );
+  }
+}
+
+async function createMember(request, response) {
+  let body = "";
+
+  request.on("data", (chunk) => {
+    body += chunk;
+  });
+
+  request.on("end", async () => {
+    try {
+      const formData = new URLSearchParams(body);
+
+      const name = formData.get("name");
+
+      const birthDate = formData.get("birth_date");
+
+      const resident = formData.get("resident") === "true";
+
+      const qf = Number(formData.get("qf"));
+
+      const medicalCertificateDate =
+        formData.get("medical_certificate_date") || null;
+
+      const familyIdValue = formData.get("family_id");
+
+      const familyId = familyIdValue ? Number(familyIdValue) : null;
+
+      if (
+        !name ||
+        name.trim() === "" ||
+        !birthDate ||
+        Number.isNaN(qf) ||
+        qf < 0 ||
+        (familyId !== null && (!Number.isInteger(familyId) || familyId <= 0))
+      ) {
         await renderer.renderPage(
-            response,
-            "error",
-            {
-                statusCode: 400,
-                message: "Invalid member ID"
-            },
-            400
+          response,
+          "error",
+          {
+            statusCode: 400,
+            message: "Invalid member data",
+          },
+          400,
         );
 
         return;
+      }
+
+      await memberService.createMember(
+        name.trim(),
+        birthDate,
+        resident,
+        qf,
+        medicalCertificateDate,
+        familyId,
+      );
+
+      response.writeHead(303, {
+        Location: "/members",
+      });
+
+      response.end();
+    } catch (error) {
+      console.error(error);
+
+      await renderer.renderPage(
+        response,
+        "error",
+        {
+          statusCode: 500,
+          message: "Internal server error",
+        },
+        500,
+      );
     }
+  });
+}
 
-    let body = "";
+async function updateMember(request, response, params) {
+  const id = Number(params.id);
 
-    request.on("data", (chunk) => {
-        body += chunk;
-    });
+  if (!Number.isInteger(id) || id <= 0) {
+    await renderer.renderPage(
+      response,
+      "error",
+      {
+        statusCode: 400,
+        message: "Invalid member ID",
+      },
+      400,
+    );
 
-    request.on("end", async () => {
-        try {
-            const data = JSON.parse(body);
+    return;
+  }
 
-            const member = await memberService.updateMember(
-                id,
-                data.name,
-                data.birth_date,
-                data.resident,
-                data.qf,
-                data.medical_certificate_date,
-                data.family_id
-            );
+  let body = "";
 
-            if (!member) {
-                await renderer.renderPage(
-                    response,
-                    "error",
-                    {
-                        statusCode: 404,
-                        message: "Member not found"
-                    },
-                    404
-                );
+  request.on("data", (chunk) => {
+    body += chunk;
+  });
 
-                return;
-            }
+  request.on("end", async () => {
+    try {
+      const formData = new URLSearchParams(body);
 
-            response.writeHead(303, {
-                Location: `/members/${id}`
-            });
+      const name = formData.get("name");
 
-            response.end();
+      const birthDate = formData.get("birth_date");
 
-        } catch (error) {
-            console.error(error);
+      const resident = formData.get("resident") === "true";
 
-            await renderer.renderPage(
-                response,
-                "error",
-                {
-                    statusCode: 500,
-                    message: "Internal server error"
-                },
-                500
-            );
-        }
-    });
+      const qf = Number(formData.get("qf"));
+
+      const medicalCertificateDate =
+        formData.get("medical_certificate_date") || null;
+
+      const familyIdValue = formData.get("family_id");
+
+      const familyId = familyIdValue ? Number(familyIdValue) : null;
+
+      if (
+        !name ||
+        name.trim() === "" ||
+        !birthDate ||
+        Number.isNaN(qf) ||
+        qf < 0 ||
+        (familyId !== null && (!Number.isInteger(familyId) || familyId <= 0))
+      ) {
+        await renderer.renderPage(
+          response,
+          "error",
+          {
+            statusCode: 400,
+            message: "Invalid member data",
+          },
+          400,
+        );
+
+        return;
+      }
+
+      const member = await memberService.updateMember(
+        id,
+        name.trim(),
+        birthDate,
+        resident,
+        qf,
+        medicalCertificateDate,
+        familyId,
+      );
+
+      if (!member) {
+        await renderer.renderPage(
+          response,
+          "error",
+          {
+            statusCode: 404,
+            message: "Member not found",
+          },
+          404,
+        );
+
+        return;
+      }
+
+      response.writeHead(303, {
+        Location: `/members/${id}`,
+      });
+
+      response.end();
+    } catch (error) {
+      console.error(error);
+
+      await renderer.renderPage(
+        response,
+        "error",
+        {
+          statusCode: 500,
+          message: "Internal server error",
+        },
+        500,
+      );
+    }
+  });
 }
 
 async function deleteMember(request, response, params) {
-    try {
-        const id = Number(params.id);
+  try {
+    const id = Number(params.id);
 
-        if (!Number.isInteger(id) || id <= 0) {
-            await renderer.renderPage(
-                response,
-                "error",
-                {
-                    statusCode: 400,
-                    message: "Invalid member ID"
-                },
-                400
-            );
+    if (!Number.isInteger(id) || id <= 0) {
+      await renderer.renderPage(
+        response,
+        "error",
+        {
+          statusCode: 400,
+          message: "Invalid member ID",
+        },
+        400,
+      );
 
-            return;
-        }
-
-        const member = await memberService.deleteMember(id);
-
-        if (!member) {
-            await renderer.renderPage(
-                response,
-                "error",
-                {
-                    statusCode: 404,
-                    message: "Member not found"
-                },
-                404
-            );
-
-            return;
-        }
-
-        response.writeHead(303, {
-            Location: "/members"
-        });
-
-        response.end();
-
-    } catch (error) {
-        console.error(error);
-
-        await renderer.renderPage(
-            response,
-            "error",
-            {
-                statusCode: 500,
-                message: "Internal server error"
-            },
-            500
-        );
+      return;
     }
+
+    const member = await memberService.deleteMember(id);
+
+    if (!member) {
+      await renderer.renderPage(
+        response,
+        "error",
+        {
+          statusCode: 404,
+          message: "Member not found",
+        },
+        404,
+      );
+
+      return;
+    }
+
+    response.writeHead(303, {
+      Location: "/members",
+    });
+
+    response.end();
+  } catch (error) {
+    console.error(error);
+
+    await renderer.renderPage(
+      response,
+      "error",
+      {
+        statusCode: 500,
+        message: "Internal server error",
+      },
+      500,
+    );
+  }
+}
+
+async function getCreateMemberPage(request, response) {
+  await renderer.renderPage(response, "member-form", {
+    editMode: false,
+    member: null,
+  });
+}
+
+async function getEditMemberPage(request, response, params) {
+  try {
+    const id = Number(params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      await renderer.renderPage(
+        response,
+        "error",
+        {
+          statusCode: 400,
+          message: "Invalid member ID",
+        },
+        400,
+      );
+
+      return;
+    }
+
+    const member = await memberService.getMemberById(id);
+
+    if (!member) {
+      await renderer.renderPage(
+        response,
+        "error",
+        {
+          statusCode: 404,
+          message: "Member not found",
+        },
+        404,
+      );
+
+      return;
+    }
+
+    await renderer.renderPage(response, "member-form", {
+      editMode: true,
+      member,
+    });
+  } catch (error) {
+    console.error(error);
+
+    await renderer.renderPage(
+      response,
+      "error",
+      {
+        statusCode: 500,
+        message: "Internal server error",
+      },
+      500,
+    );
+  }
 }
 
 module.exports = {
-    getMembers,
-    getMemberById,
-    createMember,
-    updateMember,
-    deleteMember
+  getMembers,
+  getMemberById,
+  getCreateMemberPage,
+  getEditMemberPage,
+  createMember,
+  updateMember,
+  deleteMember,
 };
