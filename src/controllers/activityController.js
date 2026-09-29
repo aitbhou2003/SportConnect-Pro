@@ -1,6 +1,7 @@
 const activityService = require("../services/activityService");
 const scheduleService = require("../services/scheduleService");
 const renderer = require("../core/renderer");
+const { act } = require("react");
 
 
 // ========================================
@@ -44,6 +45,45 @@ async function getActivities(request, response) {
 // GET /activities/:id
 // Display one activity
 // ========================================
+
+
+async function getActivityByIdJsonFormat(response,params) {
+        const id = Number(params.id)
+
+        try {
+            const activity = await activityService.getActivityByIdJsonFormat(id)
+
+        if(!activity){
+            return JSON.stringify({
+                "message": 'activity not found'
+            })
+        }
+
+        return response.end(JSON.stringify(
+            activity
+        ))
+            
+        } catch (error) {
+            return response.end(JSON.stringify({
+                "message" : error
+            }))
+        }
+   
+}
+
+async function getActivitiesWithStats(response) {
+    const activities = await activityService.getActivitiesWithStats()
+
+    await renderer.renderPage(
+        response,
+        "activities-stats",{
+            activities
+        }
+
+    )
+
+
+}
 
 async function getActivityById(request, response, params) {
     try {
@@ -1101,5 +1141,7 @@ module.exports = {
     getEditActivityPage,
     createActivity,
     updateActivity,
-    deleteActivity
+    deleteActivity,
+    getActivityByIdJsonFormat,
+    getActivitiesWithStats
 };

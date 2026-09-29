@@ -32,13 +32,18 @@ router.on("GET", "/activities/new", activityController.getCreateActivityPage);
 
 router.on("GET","/activities/:id/edit",activityController.getEditActivityPage,);
 
-router.on("GET", "/activities/:id", activityController.getActivityById);
+// router.on("GET", "/activities/:id", activityController.getActivityById);
 
 router.on("POST", "/activities", activityController.createActivity);
 
 router.on("POST", "/activities/:id/update", activityController.updateActivity);
 
 router.on("POST", "/activities/:id/delete", activityController.deleteActivity);
+
+
+router.on("GET","/activities/:id",activityController.getActivityByIdJsonFormat)
+
+router.on("GET","/stats/activities",activityController.getActivitiesWithStats)
 /*
  * Members
  */

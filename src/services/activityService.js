@@ -39,6 +39,47 @@ async function getActivityById(id) {
 }
 
 
+async function getActivityByIdJsonFormat(id){
+    const result = await pool.query(
+        `
+        SELECT 
+            activities.*,
+            associations.name AS association_name,
+            facilities.name AS facility_name
+        FROM activities
+        LEFT JOIN associations
+            ON activities.association_id = association.id
+        LEFT JOIN facilities
+            ON activities.facility_id = facilities.id
+        Where activities.id = $1
+        `,[id]
+    )
+
+    return result.rows[0]
+}
+
+
+async function getActivitiesWithStats() {
+    const result = await pool.query(
+        `
+        SELECT 
+            activities.name,
+            activities.max_capacity,
+            registrations.status AS status
+        FROM activities 
+        JOIN registrations
+            ON activities.id = registrations.activity_id
+
+
+        `
+
+
+    )
+    return result.rows
+    
+}
+
+
 async function createActivity(
     name,
     basePrice,
@@ -188,5 +229,7 @@ module.exports = {
     updateActivity,
     deleteActivity,
     getAllAssociations,
-    getAllFacilities
+    getAllFacilities,
+    getActivityByIdJsonFormat,
+    getActivitiesWithStats
 };
